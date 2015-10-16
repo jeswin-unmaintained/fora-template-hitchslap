@@ -1,2 +1,2 @@
-# fora-template-rocketship
+# fora-template-hitchslap
 App Market for Fora
