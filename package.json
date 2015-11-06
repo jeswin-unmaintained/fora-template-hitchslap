@@ -16,6 +16,11 @@
         "url": "https://github.com/jeswin/fora-template-hitchslap/issues"
     },
     "dependencies": {
-        "react": "*"
+        "react": "*",
+        "babel-polyfill": "*",
+        "babel-preset-es2015": "*",
+        "babel-preset-react": "*",
+        "babel-preset-stage-2": "*",
+        "babel-plugin-transform-async-to-generator": "*"        
     }
 }
