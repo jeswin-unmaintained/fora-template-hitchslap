@@ -1,8 +1,8 @@
-import { Schema } from './data/schema';
+import { Schema } from '../data/schema';
 
 export default { Schema };
 
-
+/*
 
 import store from "./store";
 
@@ -17,3 +17,4 @@ app.use(mount('/graphql', graphqlHTTP({ schema: Schema, pretty: true })));
 app.listen(GRAPHQL_PORT, () => console.log(
     `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}`
 ));
+*/

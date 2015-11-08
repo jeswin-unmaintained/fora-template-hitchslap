@@ -20,8 +20,8 @@ import api_provisioning from "./api_provisioning";
     This means that the system will assign a port based on rules.
 */
 export default {
-    ui_react: { module: ui_react, domain: "auto", port: "auto", path: "/", type: "ui_react" },
-    api_graphql: { module: api_graphql, domain: "auto", port: "auto", path: "/graphql", type: "api_graphql" },
-    api_provisioning: { module: api_provisioning, domain: "auto", port: "auto", path: "/provisioning", type: "service" },
-    api_filestore: { module: api_filestore, domain: "auto", port: "auto", path: "/filestore", type: "service" }
+    ui_react: { module: ui_react, path: "/", type: "ui_react" },
+    api_graphql: { module: api_graphql, path: "/graphql", type: "api_graphql" },
+    api_provisioning: { module: api_provisioning, path: "/provisioning", type: "service" },
+    api_filestore: { module: api_filestore, path: "/filestore", type: "service" }
 };

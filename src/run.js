@@ -1,4 +1,6 @@
-import host from "fora-host";
+import "babel-polyfill";
+
+import isotropy from "isotropy";
 import hitchslap from "./index";
 
-host(hitchslap);
+isotropy(hitchslap);
