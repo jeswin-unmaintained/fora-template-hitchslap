@@ -1,6 +1,11 @@
 import "babel-polyfill";
 
-import isotropy from "isotropy";
+import getIsotropy from "isotropy";
+import koa from "koa";
+import mount from "koa-mount";
+import pathToRegexp from "path-to-regexp";
 import hitchslap from "./index";
 
-isotropy(hitchslap);
+let isotropy = getIsotropy(koa, mount, pathToRegexp);
+
+isotropy(hitchslap, 8080);
