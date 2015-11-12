@@ -23,6 +23,7 @@
         "react": "*",
         "koa": "*",
         "koa-mount": "*",
+        "koa-static": "*",
         "path-to-regexp": "*",
         "babel-polyfill": "*",
         "graphql": "*",
@@ -31,9 +32,6 @@
     "devDependencies": {
         "babel-preset-es2015": "*",
         "babel-preset-react": "*",
-        "babel-preset-stage-2": "*",
-        "babel-plugin-transform-es2015-modules-commonjs": "*",
-        "babel-plugin-transform-es2015-function-name": "*",
-        "babel-plugin-transform-async-to-generator": "*"
+        "babel-preset-stage-2": "*"
     }
 }
