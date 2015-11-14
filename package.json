@@ -21,10 +21,6 @@
     "dependencies": {
         "isotropy": "*",
         "react": "*",
-        "koa": "*",
-        "koa-mount": "*",
-        "koa-static": "*",
-        "path-to-regexp": "*",
         "babel-polyfill": "*",
         "graphql": "*",
         "graphql-relay": "*"
