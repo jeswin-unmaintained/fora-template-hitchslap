@@ -9,7 +9,7 @@
 			"stopOnEntry": false,
 			"args": ["3000"],
 			"cwd": ".",
-			"runtimeExecutable": null,
+			"runtimeExecutable": "/home/jeswin/.nvm/versions/node/v5.0.0/bin/node",
 			"runtimeArgs": [
 				"--nolazy"
 			],

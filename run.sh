@@ -5,7 +5,8 @@ help() {
         -p, --port=PORT         Run the server at a specific port
         -d, --debug             Start debugger
         --no-build              Do not build the app. Just run or debug.
-        --build-deps            Build child modules. Useful when modules are being developed together.
+        --no-run              Do not run the app.
+        --build-dep             Build child modules. Useful when modules are being developed together.
         --dep-status            Check git status of dependencies"
 }
 
@@ -17,7 +18,7 @@ port=3000
 run=true
 debug=false
 build=true
-build_deps=false
+build_dep=false
 dep_status=false
 
 while :
@@ -39,8 +40,12 @@ do
             build=false
             shift
             ;;
-        --build-deps)
-            build_deps=true;
+        --no-run)
+            run=false
+            shift
+            ;;
+        --build-dep)
+            build_dep=true;
             shift
             ;;
         --dep-status)
@@ -63,8 +68,7 @@ dep_status_check() {
     curdir=`pwd`
     proj=$1
     basedir=$2
-    echo checking $basedir/$proj
-    echo ----------------------
+    echo checking ------- $basedir/$proj
     cd $basedir/$proj
     git status
     cd $curdir
@@ -80,23 +84,29 @@ if $dep_status ; then
 fi
 
 if $build ; then
-    if $build_deps ; then
+    if $build_dep ; then
         curdir=`pwd`
-        cd node_modules/isotropy/node_modules/isotropy-mount/ && ./build.sh &
+        cd node_modules/isotropy/node_modules/isotropy-mount/ && ./build.sh --source-maps inline &
         cd $curdir
-        cd node_modules/isotropy/node_modules/isotropy-router/ && ./build.sh &
+        cd node_modules/isotropy/node_modules/isotropy-router/ && ./build.sh --source-maps inline &
         cd $curdir
-        cd node_modules/isotropy/node_modules/isotropy-static/ && ./build.sh &
+        cd node_modules/isotropy/node_modules/isotropy-static/ && ./build.sh --source-maps inline &
         cd $curdir
-        cd node_modules/isotropy && ./build.sh &
+        cd node_modules/isotropy && ./build.sh --source-maps inline &
         cd $curdir
     fi
-    ./build.sh &
+    if $debug ; then
+        ./build.sh --source-maps inline &
+    else
+        ./build.sh &
+    fi
     wait
 fi
 
-if $debug ; then
-    npm debug $port
-else
-    npm start $port
+if $run ; then
+    if $debug ; then
+        npm run-script debug $port
+    else
+        npm start $port
+    fi
 fi
