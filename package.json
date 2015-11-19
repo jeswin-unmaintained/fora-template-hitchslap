@@ -4,7 +4,8 @@
     "description": "Fora template for a App Store",
     "main": "dist/index.js",
     "scripts": {
-        "start": "node dist/run.js"
+        "start": "node dist/run.js",
+        "debug": "node --debug dist/run.js"
     },
     "repository": {
         "type": "git",
