@@ -5,8 +5,9 @@ help() {
         -p, --port=PORT         Run the server at a specific port
         -d, --debug             Start debugger
         --no-build              Do not build the app. Just run or debug.
-        --no-run              Do not run the app.
+        --no-run                Do not run the app.
         --build-dep             Build child modules. Useful when modules are being developed together.
+        --no-source-maps        Do not make source maps
         --dep-status            Check git status of dependencies"
 }
 
@@ -14,12 +15,13 @@ if [ "$(whoami)" == "root" ]; then
 	echo "Running as root is a bad idea. Anyway, not stopping you."
 fi
 
-port=3000
+port=1950
 run=true
 debug=false
 build=true
 build_dep=false
 dep_status=false
+source_maps=true
 
 while :
 do
@@ -48,6 +50,10 @@ do
             build_dep=true;
             shift
             ;;
+        --no-source-maps)
+            source_maps=false;
+            shift
+            ;;
         --dep-status)
             dep_status=true
             run=false
@@ -64,49 +70,68 @@ do
     esac
 done
 
+external_depdencies=(
+    "isotropy;node_modules"
+    "isotropy-mount;node_modules/isotropy/node_modules"
+    "isotropy-router;node_modules/isotropy/node_modules"
+    "isotropy-static;node_modules/isotropy/node_modules"
+)
+
 dep_status_check() {
-    curdir=`pwd`
-    proj=$1
-    basedir=$2
-    echo checking ------- $basedir/$proj
-    cd $basedir/$proj
-    git status
-    cd $curdir
-    echo
+    for strdep in "${external_depdencies[@]}"
+    do
+        IFS=';' read -a LOCATION <<< "${strdep}"
+        proj=${LOCATION[0]}
+        basedir=${LOCATION[1]}
+        curdir=`pwd`
+        echo checking ------- $basedir/$proj
+        cd $basedir/$proj
+        git status
+        cd $curdir
+    done
 }
 
-if $dep_status ; then
-    dep_status_check "isotropy" "node_modules"
-    dep_status_check "isotropy-mount" "node_modules/isotropy/node_modules"
-    dep_status_check "isotropy-router" "node_modules/isotropy/node_modules"
-    dep_status_check "isotropy-static" "node_modules/isotropy/node_modules"
-    exit 0
-fi
-
-if $build ; then
-    if $build_dep ; then
-        curdir=`pwd`
-        cd node_modules/isotropy/node_modules/isotropy-mount/ && ./build.sh --source-maps inline &
-        cd $curdir
-        cd node_modules/isotropy/node_modules/isotropy-router/ && ./build.sh --source-maps inline &
-        cd $curdir
-        cd node_modules/isotropy/node_modules/isotropy-static/ && ./build.sh --source-maps inline &
-        cd $curdir
-        cd node_modules/isotropy && ./build.sh --source-maps inline &
-        cd $curdir
-    fi
-    if $debug ; then
+build_dep() {
+    for strdep in "${external_depdencies[@]}"
+    do
+        IFS=';' read -a LOCATION <<< "${strdep}"
+        proj=${LOCATION[0]}
+        basedir=${LOCATION[1]}
+        if [ -f $basedir/$proj/build.sh ]; then
+            curdir=`pwd`
+            cd $basedir/$proj
+            if $source_maps ; then
+                ./build.sh --source-maps inline &
+            else
+                ./build.sh &
+            fi
+            cd $curdir
+        fi
+    done
+    if $source_maps ; then
         ./build.sh --source-maps inline &
     else
         ./build.sh &
     fi
     wait
-fi
+}
 
-if $run ; then
+run() {
     if $debug ; then
         npm run-script debug $port
     else
         npm start $port
     fi
+}
+
+if $dep_status ; then
+    dep_status_check
+fi
+
+if $build ; then
+    build_dep
+fi
+
+if $run ; then
+    run
 fi
