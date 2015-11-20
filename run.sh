@@ -1,3 +1,8 @@
+if [ "$(whoami)" == "root" ]; then
+	echo "Running this as root is a bad idea."
+    exit 1
+fi
+
 help() {
     echo "Run Fora Template Application
         options:
@@ -8,12 +13,9 @@ help() {
         --no-run                Do not run the app.
         --build-dep             Build child modules. Useful when modules are being developed together.
         --no-source-maps        Do not make source maps
-        --dep-status            Check git status of dependencies"
+        --dep-status            Check git status of dependencies
+        --use-node-debug        Use the node-debug command (npm install -g node-inspector) to start the application"
 }
-
-if [ "$(whoami)" == "root" ]; then
-	echo "Running as root is a bad idea. Anyway, not stopping you."
-fi
 
 port=1950
 run=true
@@ -22,6 +24,7 @@ build=true
 build_dep=false
 dep_status=false
 source_maps=true
+use_node_debug=false
 
 while :
 do
@@ -36,6 +39,10 @@ do
             ;;
         -d | --debug)
             debug=true
+            shift
+            ;;
+        --use-node-debug)
+            use_node_debug=true;
             shift
             ;;
         --no-build)
@@ -117,10 +124,14 @@ build_dep() {
 }
 
 run() {
-    if $debug ; then
-        npm run-script debug $port
+    if $use_node_debug ; then
+        node-debug --no-preload dist/run.js
     else
-        npm start $port
+        if $debug ; then
+            npm run-script debug $port
+        else
+            npm start $port
+        fi
     fi
 }
 
