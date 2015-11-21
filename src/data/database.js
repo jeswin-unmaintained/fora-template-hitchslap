@@ -1,33 +1,28 @@
-/**
- *  Copyright (c) 2015, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- */
-
-// Model types
 class User extends Object {}
-class Widget extends Object {}
+class Template extends Object {}
 
 // Mock data
-var viewer = new User();
-viewer.id = '1';
-viewer.name = 'Anonymous';
-var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
-  var widget = new Widget();
-  widget.name = name;
-  widget.id = `${i}`;
-  return widget;
+const users = ["Jeswin", "Anup", "Raghu"].map((name, i) => {
+    const user = new User();
+    user.id = `${i}`;
+    user.name = name;
+    return user;
 });
 
+const templates = ['alpha', 'beta', 'gamma'].map((name, i) => {
+    const template = new Template();
+    template.id = `${i}`;
+    template.name = name;
+    return template;
+});
+
+const firstOrDefault = (arr) {
+    return array.length > 0 ? array[0] : null;
+}
+
 module.exports = {
-  // Export methods that your schema can use to interact with your database
-  getUser: (id) => id === viewer.id ? viewer : null,
-  getViewer: () => viewer,
-  getWidget: (id) => widgets.find(w => w.id === id),
-  getWidgets: () => widgets,
-  User,
-  Widget,
+    getUser: (id) => firstOrDefault(users.filter((u) => u.id === id)),
+    getTemplate: (id) => firstOrDefault(templates.filter((u) => u.id === id)),
+    getUsers: () => users,
+    gettemplates: () => templates
 };
